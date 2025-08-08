@@ -1,4 +1,157 @@
-# Sistema de Reservas - Estrutura Refatorada
+# 🏢 Sistema de Reservas POO - Padrão Repository
+
+Sistema de reservas de salas desenvolvido em **TypeScript** com **Express.js** e **Prisma ORM**, implementando o padrão **Repository** para separação de responsabilidades.
+
+## 🎯 **Objetivo**
+
+Implementar um sistema que permite:
+- ✅ Cadastro de pessoas e salas
+- ✅ Criação de reservas com validação de conflitos
+- ✅ Regras de negócio: Uma pessoa não pode estar em dois lugares ao mesmo tempo
+- ✅ Regras de negócio: Uma sala não pode ser usada por duas pessoas simultaneamente
+
+## 🏗️ **Arquitetura - Padrão Repository**
+
+```
+src/
+├── app.ts                      # Servidor Express principal
+├── controllers/                # Camada de controle HTTP
+│   ├── pessoaController.ts
+│   ├── salaController.ts
+│   └── reservaController.ts
+├── repository/                 # Camada de acesso a dados (um arquivo por tabela)
+│   ├── pessoaRepository.ts
+│   ├── salaRepository.ts
+│   └── reservaRepository.ts
+├── prisma/
+│   ├── schema.prisma          # Schema do banco de dados
+│   └── dev.db                 # SQLite database
+└── test-db.ts                 # Script de teste completo
+```
+
+## 🗃️ **Banco de Dados**
+
+### Tabela: Pessoa
+- `id` (Primary Key)
+- `nome` (String)
+- `email` (String)
+
+### Tabela: Sala
+- `id` (Primary Key)
+- `nome` (String)
+- `capacidade` (Number)
+
+### Tabela: Reserva
+- `id` (Primary Key)
+- `pessoaId` (Foreign Key → Pessoa)
+- `salaId` (Foreign Key → Sala)
+- `inicio` (DateTime)
+- `fim` (DateTime)
+
+## 🚀 **Como Executar**
+
+### 1. Instalar dependências
+```bash
+cd src
+npm install
+```
+
+### 2. Configurar banco de dados
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 3. Executar testes
+```bash
+npm run test-db
+```
+
+### 4. Iniciar servidor
+```bash
+npx tsx app.ts
+```
+
+## 🛠️ **API Endpoints**
+
+### Pessoas
+- `POST /pessoas` - Criar pessoa
+- `GET /pessoas` - Listar pessoas
+
+### Salas
+- `POST /salas` - Criar sala
+- `GET /salas` - Listar salas
+
+### Reservas
+- `POST /reservas` - Criar reserva
+- `GET /reservas` - Listar reservas
+- `GET /pessoas/:pessoaId/reservas` - Buscar reservas por pessoa
+
+## 🧪 **Testes de Validação**
+
+O script `test-db.ts` valida:
+
+### ✅ **Inserção de Dados**
+- Criação de 3 pessoas
+- Criação de 3 salas
+- Criação de 2 reservas válidas
+
+### ✅ **Regras de Negócio**
+1. **Teste 1**: Mesmo usuário, mesma sala, horário conflitante
+   - ❌ Deve ser bloqueado: "Pessoa já possui reserva nesse horário!"
+
+2. **Teste 2**: Mesmo usuário, salas diferentes, mesmo horário
+   - ❌ Deve ser bloqueado: "Pessoa já possui reserva nesse horário!"
+
+3. **Teste 3**: Usuário diferente, mesma sala, mesmo horário
+   - ❌ Deve ser bloqueado: "Sala já está ocupada nesse horário!"
+
+## 📋 **Exemplo de Uso**
+
+```javascript
+// Criar pessoa
+POST /pessoas
+{
+  "nome": "João Silva",
+  "email": "joao@email.com"
+}
+
+// Criar sala
+POST /salas
+{
+  "nome": "Sala de Reunião A",
+  "capacidade": 10
+}
+
+// Criar reserva
+POST /reservas
+{
+  "pessoaId": 1,
+  "salaId": 1,
+  "inicio": "2025-08-08T09:00:00",
+  "fim": "2025-08-08T10:00:00"
+}
+```
+
+## 🎯 **Tecnologias Utilizadas**
+
+- **TypeScript** - Linguagem principal
+- **Express.js** - Framework web
+- **Prisma ORM** - Object-Relational Mapping
+- **SQLite** - Banco de dados
+- **tsx** - Executor TypeScript
+
+## ✨ **Características Implementadas**
+
+- ✅ **Padrão Repository**: Um arquivo por tabela do banco
+- ✅ **Validação de Conflitos**: Detecção automática de sobreposições
+- ✅ **Relacionamentos**: Dados carregados com `include`
+- ✅ **Testes Automatizados**: Script completo de validação
+- ✅ **Separação de Responsabilidades**: Controllers → Repositories → Database
+
+---
+
+**Desenvolvido para disciplina de Programação Orientada a Objetos** 🎓
 
 ## Resumo da Refatoração
 
