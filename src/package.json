@@ -1,0 +1,24 @@
+{
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "tsx watch app.ts",
+    "build": "tsc",
+    "test-db": "tsx test-db.ts",
+    "test-api": "tsx api-test.ts",
+    "test-services": "tsx test-services.ts",
+    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=./prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "@types/node": "^24.2.0",
+    "express": "^5.1.0",
+    "prisma": "^6.13.0",
+    "tsx": "^4.20.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
