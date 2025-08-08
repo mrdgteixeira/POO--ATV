@@ -78,11 +78,38 @@ async function criarReservas(pessoas, salas) {
 }
 async function testarConflitos(pessoas, salas) {
     console.log('\n⚠️  Testando detecção de conflitos...');
+    // Teste 1: Mesmo usuário tentando reservar a mesma sala em horário conflitante
+    console.log('\n🔸 Teste 1: Mesmo usuário, mesma sala, horário conflitante');
     try {
         await reservaRepo.criar(pessoas[0].id, // Mesmo usuário da primeira reserva
-        salas[0].id, new Date('2025-08-08T09:30:00'), // Horário conflitante
+        salas[0].id, // Mesma sala da primeira reserva
+        new Date('2025-08-08T09:30:00'), // Horário conflitante
         new Date('2025-08-08T10:30:00'));
         console.log('  ❌ ERRO: Conflito não foi detectado!');
+    }
+    catch (error) {
+        console.log('  ✅ Conflito detectado corretamente: ' + error.message);
+    }
+    // Teste 2: Mesmo usuário tentando reservar salas diferentes no mesmo horário
+    console.log('\n🔸 Teste 2: Mesmo usuário, salas diferentes, mesmo horário');
+    try {
+        await reservaRepo.criar(pessoas[0].id, // Mesmo usuário da primeira reserva (João)
+        salas[1].id, // Sala DIFERENTE da primeira reserva
+        new Date('2025-08-08T09:00:00'), // MESMO horário da primeira reserva
+        new Date('2025-08-08T10:00:00'));
+        console.log('  ❌ ERRO: Conflito não foi detectado! Uma pessoa não deveria poder reservar duas salas ao mesmo tempo!');
+    }
+    catch (error) {
+        console.log('  ✅ Conflito detectado corretamente: ' + error.message);
+    }
+    // Teste 3: Usuário diferente tentando reservar a mesma sala no mesmo horário
+    console.log('\n🔸 Teste 3: Usuário diferente, mesma sala, mesmo horário');
+    try {
+        await reservaRepo.criar(pessoas[1].id, // Usuário DIFERENTE (Maria)
+        salas[0].id, // Mesma sala da primeira reserva do João
+        new Date('2025-08-08T09:00:00'), // MESMO horário
+        new Date('2025-08-08T10:00:00'));
+        console.log('  ❌ ERRO: Conflito não foi detectado! Uma sala não pode ser reservada por duas pessoas ao mesmo tempo!');
     }
     catch (error) {
         console.log('  ✅ Conflito detectado corretamente: ' + error.message);

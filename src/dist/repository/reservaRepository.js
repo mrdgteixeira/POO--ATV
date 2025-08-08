@@ -16,10 +16,39 @@ class ReservaRepository {
         return !!reserva;
     }
     async criar(pessoaId, salaId, inicio, fim) {
-        // Verificar conflito antes de criar
-        const conflito = await this.temConflito(pessoaId, inicio, fim);
-        if (conflito) {
+        // Verificar se a pessoa já tem reserva nesse horário
+        const conflitoPessoa = await this.temConflito(pessoaId, inicio, fim);
+        if (conflitoPessoa) {
             throw new Error('Pessoa já possui reserva nesse horário!');
+        }
+        // Verificar se a sala já está ocupada nesse horário
+        const salaOcupada = await prisma.reserva.findFirst({
+            where: {
+                salaId,
+                OR: [
+                    {
+                        AND: [
+                            { inicio: { lte: inicio } },
+                            { fim: { gt: inicio } }
+                        ]
+                    },
+                    {
+                        AND: [
+                            { inicio: { lt: fim } },
+                            { fim: { gte: fim } }
+                        ]
+                    },
+                    {
+                        AND: [
+                            { inicio: { gte: inicio } },
+                            { fim: { lte: fim } }
+                        ]
+                    }
+                ]
+            }
+        });
+        if (salaOcupada) {
+            throw new Error('Sala já está ocupada nesse horário!');
         }
         return await prisma.reserva.create({
             data: { pessoaId, salaId, inicio, fim }
@@ -33,15 +62,6 @@ class ReservaRepository {
             }
         });
     }
-    async buscarPorId(id) {
-        return await prisma.reserva.findUnique({
-            where: { id },
-            include: {
-                pessoa: true,
-                sala: true
-            }
-        });
-    }
     async buscarPorPessoa(pessoaId) {
         return await prisma.reserva.findMany({
             where: { pessoaId },
@@ -49,30 +69,6 @@ class ReservaRepository {
                 pessoa: true,
                 sala: true
             }
-        });
-    }
-    async buscarPorSala(salaId) {
-        return await prisma.reserva.findMany({
-            where: { salaId },
-            include: {
-                pessoa: true,
-                sala: true
-            }
-        });
-    }
-    async atualizar(id, dados) {
-        return await prisma.reserva.update({
-            where: { id },
-            data: dados,
-            include: {
-                pessoa: true,
-                sala: true
-            }
-        });
-    }
-    async deletar(id) {
-        return await prisma.reserva.delete({
-            where: { id }
         });
     }
 }

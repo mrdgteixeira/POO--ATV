@@ -40,4 +40,4 @@ class ReservaService {
     }
 }
 exports.ReservaService = ReservaService;
-//# sourceMappingURL=service.js.map
+//# sourceMappingURL=reservaService.js.map

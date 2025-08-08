@@ -1,13 +1,13 @@
-export declare class ReservaRepository {
-    temConflito(pessoaId: number, inicio: Date, fim: Date): Promise<boolean>;
-    criar(pessoaId: number, salaId: number, inicio: Date, fim: Date): Promise<{
+export declare class ReservaService {
+    private reservaRepository;
+    criarReserva(pessoaId: number, salaId: number, inicio: Date, fim: Date): Promise<{
         id: number;
         fim: Date;
         inicio: Date;
         pessoaId: number;
         salaId: number;
     }>;
-    listarTodos(): Promise<({
+    listarReservas(): Promise<({
         pessoa: {
             nome: string;
             email: string;
@@ -25,7 +25,7 @@ export declare class ReservaRepository {
         pessoaId: number;
         salaId: number;
     })[]>;
-    buscarPorPessoa(pessoaId: number): Promise<({
+    buscarReservasPorPessoa(pessoaId: number): Promise<({
         pessoa: {
             nome: string;
             email: string;
@@ -44,4 +44,4 @@ export declare class ReservaRepository {
         salaId: number;
     })[]>;
 }
-//# sourceMappingURL=reservaRepository.d.ts.map
+//# sourceMappingURL=reservaService.d.ts.map

@@ -32,5 +32,10 @@ export declare class SalaRepository {
         id: number;
         capacidade: number;
     }>;
+    buscarDisponiveis(inicio: Date, fim: Date): Promise<{
+        nome: string;
+        id: number;
+        capacidade: number;
+    }[]>;
 }
 //# sourceMappingURL=salaRepository.d.ts.map

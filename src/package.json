@@ -5,6 +5,7 @@
     "build": "tsc",
     "test-db": "tsx test-db.ts",
     "test-api": "tsx api-test.ts",
+    "test-services": "tsx test-services.ts",
     "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema=./prisma/schema.prisma"
   },

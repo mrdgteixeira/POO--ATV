@@ -19,7 +19,12 @@ class SalaRepository {
     }
     async buscarPorNome(nome) {
         return await prisma.sala.findFirst({
-            where: { nome }
+            where: {
+                nome: {
+                    equals: nome,
+                    mode: 'insensitive'
+                }
+            }
         });
     }
     async atualizar(id, dados) {
@@ -31,6 +36,36 @@ class SalaRepository {
     async deletar(id) {
         return await prisma.sala.delete({
             where: { id }
+        });
+    }
+    async buscarDisponiveis(inicio, fim) {
+        return await prisma.sala.findMany({
+            where: {
+                reservas: {
+                    none: {
+                        OR: [
+                            {
+                                AND: [
+                                    { inicio: { lte: inicio } },
+                                    { fim: { gt: inicio } }
+                                ]
+                            },
+                            {
+                                AND: [
+                                    { inicio: { lt: fim } },
+                                    { fim: { gte: fim } }
+                                ]
+                            },
+                            {
+                                AND: [
+                                    { inicio: { gte: inicio } },
+                                    { fim: { lte: fim } }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
         });
     }
 }

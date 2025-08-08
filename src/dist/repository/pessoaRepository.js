@@ -18,8 +18,13 @@ class PessoaRepository {
         });
     }
     async buscarPorEmail(email) {
-        return await prisma.pessoa.findUnique({
-            where: { email }
+        return await prisma.pessoa.findFirst({
+            where: {
+                email: {
+                    equals: email,
+                    mode: 'insensitive'
+                }
+            }
         });
     }
     async atualizar(id, dados) {
