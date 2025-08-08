@@ -1,0 +1,33 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Pessoa {
+  id      Int      @id @default(autoincrement())
+  nome    String
+  email   String   @unique
+  reservas Reserva[]
+}
+
+model Sala {
+  id      Int      @id @default(autoincrement())
+  nome    String
+  capacidade Int
+  reservas Reserva[]
+}
+
+model Reserva {
+  id        Int      @id @default(autoincrement())
+  pessoaId  Int
+  salaId    Int
+  inicio    DateTime
+  fim       DateTime
+  pessoa    Pessoa   @relation(fields: [pessoaId], references: [id])
+  sala      Sala     @relation(fields: [salaId], references: [id])
+}
