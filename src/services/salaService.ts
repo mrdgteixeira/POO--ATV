@@ -4,7 +4,6 @@ export class SalaService {
   private salaRepository = new SalaRepository();
 
   async criarSala(nome: string, capacidade: number) {
-    // Validações básicas
     if (!nome || nome.trim().length === 0) {
       throw new Error('Nome da sala é obrigatório!');
     }
@@ -17,9 +16,6 @@ export class SalaService {
       throw new Error('Capacidade não pode exceder 1000 pessoas!');
     }
 
-    // Como não há constraint único para nome de sala no schema,
-    // vamos manter a verificação, mas de forma mais eficiente seria
-    // adicionar uma constraint no banco ou criar um método específico
     const salasExistentes = await this.salaRepository.listarTodos();
     const nomeJaExiste = salasExistentes.some((sala: any) => 
       sala.nome.toLowerCase() === nome.trim().toLowerCase()

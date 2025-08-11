@@ -10,7 +10,6 @@ async function testarServices() {
   try {
     console.log('🧪 TESTANDO SERVICES (apenas métodos existentes)...\n');
 
-    // Teste PessoaService
     console.log('👥 Testando PessoaService:');
     
     try {
@@ -27,7 +26,6 @@ async function testarServices() {
 
     console.log('  📋 Métodos disponíveis: criarPessoa(), listarPessoas()');
 
-    // Teste SalaService
     console.log('\n🏢 Testando SalaService:');
     
     try {
@@ -50,12 +48,11 @@ async function testarServices() {
 
     console.log('  📋 Métodos disponíveis: criarSala(), listarSalas()');
 
-    // Teste ReservaService
     console.log('\n📅 Testando ReservaService:');
     
     try {
       const agora = new Date();
-      const antes = new Date(agora.getTime() - 1000 * 60 * 60); // 1 hora atrás
+      const antes = new Date(agora.getTime() - 1000 * 60 * 60);
       await reservaService.criarReserva(1, 1, antes, agora);
     } catch (error: any) {
       console.log('  ✅ Validação data passada:', error.message);
@@ -63,7 +60,7 @@ async function testarServices() {
 
     try {
       const inicio = new Date('2025-08-10T09:00:00');
-      const fim = new Date('2025-08-10T08:00:00'); // Fim antes do início
+      const fim = new Date('2025-08-10T08:00:00');
       await reservaService.criarReserva(1, 1, inicio, fim);
     } catch (error: any) {
       console.log('  ✅ Validação horário inválido:', error.message);
@@ -71,7 +68,7 @@ async function testarServices() {
 
     try {
       const inicio = new Date('2025-08-10T09:00:00');
-      const fim = new Date('2025-08-10T18:00:00'); // 9 horas
+      const fim = new Date('2025-08-10T18:00:00');
       await reservaService.criarReserva(1, 1, inicio, fim);
     } catch (error: any) {
       console.log('  ✅ Validação reserva muito longa:', error.message);
@@ -88,5 +85,4 @@ async function testarServices() {
   }
 }
 
-// Executar teste
 testarServices();
