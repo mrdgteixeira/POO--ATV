@@ -31,7 +31,19 @@ export class ReservaService {
       throw new Error('Reserva não pode ultrapassar 8 horas!');
     }
 
-    // Repository já faz todas as validações de conflito (pessoa + sala + existência)
+    // Verificar conflitos de agenda da pessoa
+    const conflitoPessoa = await this.reservaRepository.temConflitoPessoa(pessoaId, inicio, fim);
+    if (conflitoPessoa) {
+      throw new Error('Pessoa já possui reserva nesse horário!');
+    }
+
+    // Verificar se a sala já está ocupada
+    const conflitoSala = await this.reservaRepository.temConflitoSala(salaId, inicio, fim);
+    if (conflitoSala) {
+      throw new Error('Sala já está ocupada nesse horário!');
+    }
+
+    // Criar a reserva após todas as validações
     return this.reservaRepository.criar(pessoaId, salaId, inicio, fim);
   }
 
